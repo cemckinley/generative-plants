@@ -7,13 +7,83 @@
 	<title>Generative Plants test</title>
 	
 	<style type="text/css">
-	
+		body{
+			font-family: 'HelveticaNeue Light', 'Helvetica Neue Light', Helvetica, Arial, Sans-Serif;
+		}
+		h1{
+			font-weight: 200;
+			margin: 0 0 20px 0;
+		}
+		p{
+			width: 240px;
+			display: inline-block;
+			clear: both;
+			margin: 0;
+			font-size: 12px;
+			line-height: 14px;
+			font-family: Georgia, Serif;
+			font-style: italic;
+			color: #aaa;
+		}
+		fieldset{
+			border: 1px solid #ccc;
+			padding: 20px;
+		}
+		legend{
+			font-size: 14px;
+			font-weight: bold;
+			font-style: italic;
+			font-family: Georgia, Serif;
+			padding: 0 10px;
+			margin-left: -10px;
+		}
+		fieldset ul{
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+		fieldset ul li{
+			display: block;
+			clear: both;
+			padding: 0;
+			margin: 0 0 15px 0;
+		}
+		label{
+			display: inline-block;
+			vertical-align: middle;
+			margin: 0 10px 0 0;
+			font-size: 12px;
+			font-weight: bold;
+			float: left;
+		}
+		input{
+			float: right;
+			display: block;
+		}
+		input[type="text"]{
+			width: 30px;
+		}
+		input[type="submit"]{
+			display: block;
+			clear: both;
+			float: none;
+			margin: 15px 0 0 0;
+		}
+		#wrapper{
+			width: 960px;
+			margin: 50px auto;
+		}
 		#canvas{
 			display:block;
-			width:700px;
-			height:900px;
+			float: left;
+			width:600px;
+			height:600px;
 			background:#000;
-			margin:50px auto;
+			margin:0 30px 0 0;
+		}
+		#controls{
+			width: 330px;
+			float: left;
 		}
 		
 	</style>
@@ -21,26 +91,38 @@
 	<script type="text/javascript">
 		
 		function draw(){
+
+			// priveleged vars
 			var canvas = document.getElementById('canvas'),
 				ctx = canvas.getContext('2d'),
 				cWidth = canvas.width,
 				cHeight = canvas.height,
 				avgSegments = 32,
 				segmentVariability = 2, // max number possible + or - branch segments
-				maxBranches = 3,
+				maxBranches = 2,
 				startLineWidth = 14,
 				startingBranchProbability = .6, // a decimal between 0-1 to indicate probability of another branch starting from the same point
-				branchProbabilityReductionRate = .9, // how fast the probability reduces toward the end of a branch
+				branchProbabilityReductionRate = .92, // how fast the probability reduces toward the end of a branch
 				maxBerriesPerSegment = 4,
 				berryWidth = 3;
+
+			// event handlers
+			document.getElementById('regenerateTree').addEventListener('click', function(e){
+				e.preventDefault();
+				regenerate();
+			});
 			
+			// setup
 			ctx.fillStyle = 'white';
 			ctx.strokeStyle = 'white';
 			ctx.lineJoin = 'round';
 			ctx.lineCap = 'round';
 			ctx.lineWidth = startLineWidth;
 			ctx.translate(cWidth/2, cHeight);
+
+			branch(avgSegments, 0, startingBranchProbability, 2, berryWidth);
 			
+
 			function branch(segments, branches, branchProbability, berryProbability, berrySize){
 				var segmentVariation = randomNumberInRange(0, segmentVariability, true),
 					segmentLength = randomNumberInRange(-130, -120, false);
@@ -56,7 +138,6 @@
 				// berries
 				if(segments <= avgSegments/2){ // only add berries on upper half of branches
 					ctx.beginPath();
-					console.log(berrySize);
 					ctx.arc(randomNumberInRange(startLineWidth,startLineWidth + 5,true), randomNumberInRange(segmentLength/2, segmentLength, false), berrySize, 0, 2*Math.PI, false);
 					ctx.fill();
 				}
@@ -73,10 +154,26 @@
 				if(branches > 0 && Math.random() <= branchProbability){ // start another branch from last saved coordinate
 					branch(segments, branches, branchProbability, 2, berrySize);
 				}
-				
-				
 			}
-			branch(avgSegments, 0, startingBranchProbability, 2, berryWidth);
+
+			function regenerate(){
+				// im feeling lazy and didnt feel like caching the dom elements as vars
+				avgSegments = parseInt(document.getElementById('avgSegments').value);
+				segmentVariability = parseInt(document.getElementById('segmentVariability').value);
+				maxBranches = parseInt(document.getElementById('maxBranches').value);
+				startLineWidth = parseInt(document.getElementById('startLineWidth').value);
+				startingBranchProbability = parseFloat(document.getElementById('startingBranchProbability').value);
+				branchProbabilityReductionRate = parseFloat(document.getElementById('branchProbabilityReductionRate').value);
+				maxBerriesPerSegment = parseInt(document.getElementById('maxBerriesPerSegment').value);
+				berryWidth = parseInt(document.getElementById('berryWidth').value);
+
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				ctx.clearRect(0,0,cWidth,cHeight);
+				ctx.translate(cWidth/2, cHeight);
+				ctx.lineWidth = startLineWidth;
+
+				branch(avgSegments, 0, startingBranchProbability, 2, berryWidth);
+			}
 			
 			// generate randomized number, where number is a number between $min and $max, and plusOrMinus is a boolean indicating if that number can be positive or negative
 			function randomNumberInRange(min, max, plusOrMinus){
@@ -106,8 +203,61 @@
 
 <body>
 	
-	<canvas id="canvas" width="700" height="900">
-	</canvas>
+	<div id="wrapper">
+		<canvas id="canvas" width="600" height="600">
+		</canvas>
+		<div id="controls">
+			<h1>L-System Tree</h1>
+			<form id="treeVariables">
+				<fieldset>
+					<legend>Tree Variables</legend>
+					<ul>
+						<li>
+							<label for="avgSegments">Average Segments</label>
+							<input type="text" id="avgSegments" value="32" />
+							<p>Average number of segments from base to end of branches</p>
+						</li>
+						<li>
+							<label for="segmentVariability">Segment Variability</label>
+							<input type="text" id="segmentVariability" value="2" />
+							<p>max number possible +- branch segments from average segments</p>
+						</li>
+						<li>
+							<label for="maxBranches">Max Branches</label>
+							<input type="text" id="maxBranches" value="2" />
+							<p>Max number of times a segment can branch at a joint</p>
+						</li>
+						<li>
+							<label for="startLineWidth">Starting Line Width</label>
+							<input type="text" id="startLineWidth" value="14" />
+							<p>Starting thickness of base, in pixels</p>
+						</li>
+						<li>
+							<label for="startingBranchProbability">Starting branch probability</label>
+							<input type="text" id="startingBranchProbability" value=".6" />
+							<p>A decimal between 0-1 to indicate probability of another branch starting from the same point</p>
+						</li>
+						<li>
+							<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
+							<input type="text" id="branchProbabilityReductionRate" value=".92" />
+							<p>A decimal between 0-1 for rate probability of branching reduces in each subsequent segment</p>
+						</li>
+						<li>
+							<label for="maxBerriesPerSegment">Max berries per segment</label>
+							<input type="text" id="maxBerriesPerSegment" value="4" />
+							<p>Max number of berries to appear on any given segment. Note: berries do not appear until upper half of possible segments</p>
+						</li>
+						<li>
+							<label for="berryWidth">Berry Diameter</label>
+							<input type="text" id="berryWidth" value="3" />
+						</li>
+					</ul>
+					<br />
+					<input type="submit" value="Regenerate" id="regenerateTree" />
+				</fieldset>
+			</form>
+		</div>
+	</div>
 	
 </body>
 
