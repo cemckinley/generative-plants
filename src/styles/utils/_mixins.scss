@@ -1,0 +1,87 @@
+$vendors: webkit ms moz o spec;
+
+@mixin vendor-property-prefix($property, $value) {
+	@each $vendor in $vendors {
+		
+		@if $vendor == spec {
+			#{$property}: #{$value};
+      	} 
+      	@else {
+			-#{$vendor}-#{$property}: #{$value};
+      	}
+    }
+ }
+
+@mixin vendor-value-prefix($property, $value) {
+	@each $vendor in $vendors {
+		@if $vendor == spec {
+			#{$property}: #{$value};
+		}
+		@else {
+			#{$property}: -#{$vendor}-#{$value};
+		}
+	}
+}
+
+@mixin vendor-property-value-prefix($property, $value) {
+	@each $vendor in $vendors {
+		@if $vendor == spec {
+			#{$property}: #{$value};
+		}
+		@else {
+			-#{$vendor}-#{$property}: -#{$vendor}-#{$value};
+		}
+	}
+}
+
+
+ @mixin animation ($name, $duration: 1s, $timing: linear, $iteration: infinite, $direction: normal, $fillMode: none){
+	@each $vendor in $vendors {
+		
+		@if $vendor == spec {
+			animation-name: #{$name};
+			animation-duration: #{$duration};
+			animation-timing-function: #{$timing};
+			animation-iteration-count: #{$iteration};
+			animation-direction: #{$direction};
+			animation-fill-mode: #{$fillMode};
+      	} 
+      	@else {
+			-#{$vendor}-animation-name: #{$name};
+			-#{$vendor}-animation-duration: #{$duration};
+			-#{$vendor}-animation-timing-function: #{$timing};
+			-#{$vendor}-animation-iteration-count: #{$iteration};
+			-#{$vendor}-animation-direction: #{$direction};
+			-#{$vendor}-animation-fill-mode: #{$fillMode};
+      	}
+    }
+}
+
+@mixin clearfix() {
+	*zoom: 1;
+
+	&:before,
+	&:after {
+	    content: "";
+	    display: table;
+	}
+	&:after {
+	    clear: both;
+	}
+}
+
+@mixin background-linear-gradient($from, $to) {
+	background-color: $from;
+
+	@if $to != $from {
+		@include vendor-value-prefix( 
+			background-image, linear-gradient($from, $to) 
+		);
+	}
+}
+
+@mixin accelerate(){
+	@include vendor-property-prefix(transform, translate3d(0,0,0));
+	@include vendor-property-prefix(backface-visibility, hidden);
+	@include vendor-property-prefix(perspective, 1000);
+}
