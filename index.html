@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if gte IE 9]>         <html class="ie9"> <![endif]-->
+<!--[if gt IE 9]><!--> <html dir="ltr" lang="en"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8" />
+		<title>generative-plants</title>
+
+		<meta name="viewport" content="width=1000, maximum-scale=1" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+
+		<meta property="fb:admins" content="" />
+		<meta property="og:title" content="" />
+		<meta property="og:type" content="" />
+		<meta property="og:url" content="" />
+		<meta property="og:image" content="" />
+		<meta property="og:description" content="" />
+
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="assets/css/app.css" />
+
+		<script src="assets/js/lib/modernizr.js"></script>
+
+
+	</head>
+
+	<body id="page-home">
+
+		<div id="wrapper">
+
+
+			<canvas id="canvas" width="600" height="600">
+			</canvas>
+
+
+			<div id="controls">
+
+				<h1>L-System Tree</h1>
+
+				<form id="treeVariables">
+					<fieldset>
+
+						<legend>Tree Variables</legend>
+
+						<ul>
+							<li>
+								<label for="avgSegments">Average Segments</label>
+								<input type="text" id="avgSegments" value="28" />
+								<p>Average number of segments from base to end of branches</p>
+							</li>
+							<li>
+								<label for="segmentVariability">Segment Variability</label>
+								<input type="text" id="segmentVariability" value="2" />
+								<p>max number possible +- branch segments from average segments</p>
+							</li>
+							<li>
+								<label for="maxBranches">Max Branches</label>
+								<input type="text" id="maxBranches" value="2" />
+								<p>Max number of times a segment can branch at a joint</p>
+							</li>
+							<li>
+								<label for="startLineWidth">Starting Line Width</label>
+								<input type="text" id="startLineWidth" value="14" />
+								<p>Starting thickness of base, in pixels</p>
+							</li>
+							<li>
+								<label for="startingBranchProbability">Starting branch probability</label>
+								<input type="text" id="startingBranchProbability" value=".6" />
+								<p>A decimal between 0-1 to indicate probability of another branch starting from the same point</p>
+							</li>
+							<li>
+								<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
+								<input type="text" id="branchProbabilityReductionRate" value=".92" />
+								<p>A decimal between 0-1 for reduction rate of branching in each subsequent segment</p>
+							</li>
+							<li>
+								<label for="maxBerriesPerSegment">Max berries per cluster</label>
+								<input type="text" id="maxBerriesPerSegment" value="1" />
+								<p>Max number of berries to appear in a cluster on any given segment. Note: berries do not appear until upper half of possible segments</p>
+							</li>
+							<li>
+								<label for="berryWidth">Berry Diameter</label>
+								<input type="text" id="berryWidth" value="3" />
+							</li>
+						</ul>
+						<br />
+
+						<input type="submit" value="Regenerate" id="regenerateTree" />
+
+					</fieldset>
+				</form>
+
+			</div>
+
+
+		</div>
+
+		<script src="assets/js/app.js"></script>
+
+
+	</body>
+</html>
