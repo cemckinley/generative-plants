@@ -5,6 +5,7 @@
  * @copyright  Copyright (c) 2013 Cara McKinley
  */
 
+var mathUtil = require('../utils/math');
 
 
 var berryTree = {
@@ -53,6 +54,7 @@ var berryTree = {
 
 		this._setupCanvas();
 		this._addUIElements();
+		this._setOptions();
 
 		this._addEventHandlers();
 
@@ -64,7 +66,7 @@ var berryTree = {
 	 */
 	draw: function(){
 		// recursive function for branching
-		this._createBranch( this.options.avgSegments, 0, this.options.startingBranchProbability, 2, this.options.berryWidth );
+		this._createBranch( this.options.avgSegments, 0, this.options.startingBranchProbability, this.options.berryWidth );
 	},
 
 
@@ -135,15 +137,14 @@ var berryTree = {
 	 * @param  {Number} segments          Number of segments the branch has
 	 * @param  {Number} branches          Number of branches being created at this joint
 	 * @param  {Number} branchProbability Probability of creating another branch
-	 * @param  {Number} berryProbability  Probability of adding a berry
 	 * @param  {Number} berrySize         Diameter of the berry, at 100% canvas scale
 	 */
-	_createBranch: function(segments, branches, branchProbability, berryProbability, berrySize){
-		var segmentVariation = this._getRandomNumberInRange(0, this.options.segmentVariability, true),
-			segmentLength = this._getRandomNumberInRange(-130, -120, false);
+	_createBranch: function(segments, branches, branchProbability, berrySize){
+		var segmentVariation = mathUtil.getRandomNumInRange(0, this.options.segmentVariability, true),
+			segmentLength = mathUtil.getRandomNumInRange(-75, -55, false);
 
 		this.ctx.save();
-		this.ctx.rotate( this._getRandomAngle( 10, 27, true ) );
+		this.ctx.rotate( mathUtil.getRandomAngle( 0, 25, true ) );
 		this.ctx.beginPath();
 		this.ctx.lineTo( 0, 0);
 		this.ctx.lineTo( 0, segmentLength );
@@ -151,56 +152,38 @@ var berryTree = {
 		this.ctx.stroke();
 
 		// berries
-		if( segments <= this.options.avgSegments / 2 ){ // only add berries on upper half of branches
-			this.ctx.beginPath();
-			this.ctx.arc( this._getRandomNumberInRange( this.options.startLineWidth, this.options.startLineWidth + 5, true ), this._getRandomNumberInRange( segmentLength/2, segmentLength, false ), berrySize, 0, 2*Math.PI, false);
-			this.ctx.fill();
+		if( segments <= this.options.avgSegments / 1.7 ){ // only add berries on upper portion of branches
+			this._drawBerries(berrySize, segmentLength);
 		}
 
 		segments--;
 		if( segments + segmentVariation > 0 ){ // recursively call next branch segment
-			this.ctx.scale(0.9, 0.9);
-			this._createBranch( segments, this.options.maxBranches, branchProbability * this.options.branchProbabilityReductionRate, 2, berrySize*1.08 ); // next will branch randomly within maxBranch number of times. Berry size needs to incrementally increase to compensate for segment size shrink
+			this.ctx.scale(0.9, 0.9); // scale each subsequent segment to 90% via scaling the canvas before drawing
+			// next will branch randomly within maxBranch number of times. Berry size needs to incrementally increase to compensate for segment size shrink
+			this._createBranch( segments, this.options.maxBranches, branchProbability * this.options.branchProbabilityReductionRate, berrySize*1.08 );
 		}
 
 		this.ctx.restore();
 
 		branches--;
 		if(branches > 0 && Math.random() <= branchProbability){ // start another branch from last saved coordinate
-			this._createBranch( segments, branches, branchProbability, 2, berrySize );
+			this._createBranch( segments, branches, branchProbability, berrySize );
 		}
 	},
 
-	/**
-	 * generate randomized number, where number is a number between min and max, and plusOrMinus is a
-	 * boolean indicating if that number can be positive or negative
-	 * @param  {Number} min         Minimum value
-	 * @param  {Number} max         Maximum value
-	 * @param  {Boolean} plusOrMinus Set to true if value can be positive or negative
-	 * @return {Number}             Resulting random value
-	 */
-	_getRandomNumberInRange: function(min, max, plusOrMinus){
-		var variation = Math.random() * (max - min),
-			randomNumber = max - variation,
-			posNeg = 1;
+	_drawBerries: function(berrySize, segmentLength){
+		var berryCount = Math.random() * this.options.maxBerriesPerSegment,
+			posX = mathUtil.getRandomNumInRange( this.options.startLineWidth, this.options.startLineWidth + 5, true ), // berry should fall just oustide of the segment
+			posY = mathUtil.getRandomNumInRange( 0, segmentLength, false ), // berry should be positioned along the length of the segment
+			posVariant;
 
-		if(plusOrMinus){
-			posNeg = Math.random();
-			posNeg = posNeg <= 0.5 ? 1 : -1;
+		for( var i = 0, len = berryCount; i < len; i++ ){
+			posVariant = mathUtil.getRandomNumInRange(3, 10, true);
+
+			this.ctx.beginPath();
+			this.ctx.arc( posX + posVariant, posY + posVariant, berrySize, 0, 2*Math.PI, false);
+			this.ctx.fill();
 		}
-
-		return Math.random() * (randomNumber * posNeg);
-	},
-
-	/**
-	 * Get a random angle in degrees between a min and max value, with option to be positive or negative
-	 * @param  {Number} min         Minimum value
-	 * @param  {Number} max         Maximum value
-	 * @param  {Boolean} plusOrMinus Set to true if value can be positive or negative
-	 * @return {Number}             Resulting random angle in degrees
-	 */
-	_getRandomAngle: function(min, max, plusOrMinus){ // canvas rotates using radians, so output result of randomNumberInRange in radians
-		return Math.PI / (180 / this._getRandomNumberInRange(min, max, plusOrMinus));
 	},
 
 

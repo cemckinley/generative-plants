@@ -46,7 +46,7 @@
 						<ul>
 							<li>
 								<label for="avgSegments">Average Segments</label>
-								<input type="text" id="avgSegments" value="32" />
+								<input type="text" id="avgSegments" value="28" />
 								<p>Average number of segments from base to end of branches</p>
 							</li>
 							<li>
@@ -72,12 +72,12 @@
 							<li>
 								<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
 								<input type="text" id="branchProbabilityReductionRate" value=".92" />
-								<p>A decimal between 0-1 for rate probability of branching reduces in each subsequent segment</p>
+								<p>A decimal between 0-1 for reduction rate of branching in each subsequent segment</p>
 							</li>
 							<li>
-								<label for="maxBerriesPerSegment">Max berries per segment</label>
-								<input type="text" id="maxBerriesPerSegment" value="4" />
-								<p>Max number of berries to appear on any given segment. Note: berries do not appear until upper half of possible segments</p>
+								<label for="maxBerriesPerSegment">Max berries per cluster</label>
+								<input type="text" id="maxBerriesPerSegment" value="1" />
+								<p>Max number of berries to appear in a cluster on any given segment. Note: berries do not appear until upper half of possible segments</p>
 							</li>
 							<li>
 								<label for="berryWidth">Berry Diameter</label>
