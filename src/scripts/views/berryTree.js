@@ -179,8 +179,8 @@ var berryTree = {
 			posVariantY;
 
 		for( var i = 0, len = berryCount; i < len; i++ ){
-			posVariantX = mathUtil.getRandomNumInRange(3, 10, true);
-			posVariantY = mathUtil.getRandomNumInRange(-3, -10, false);
+			posVariantX = mathUtil.getRandomNumInRange(5, 15, true);
+			posVariantY = mathUtil.getRandomNumInRange(-5, -15, false);
 
 			// berry stem
 			this.ctx.lineWidth = 3;
