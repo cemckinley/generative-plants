@@ -175,13 +175,24 @@ var berryTree = {
 		var berryCount = Math.random() * this.options.maxBerriesPerSegment,
 			posX = mathUtil.getRandomNumInRange( this.options.startLineWidth, this.options.startLineWidth + 5, true ), // berry should fall just oustide of the segment
 			posY = mathUtil.getRandomNumInRange( 0, segmentLength, false ), // berry should be positioned along the length of the segment
-			posVariant;
+			posVariantX,
+			posVariantY;
 
 		for( var i = 0, len = berryCount; i < len; i++ ){
-			posVariant = mathUtil.getRandomNumInRange(3, 10, true);
+			posVariantX = mathUtil.getRandomNumInRange(3, 10, true);
+			posVariantY = mathUtil.getRandomNumInRange(-3, -10, false);
 
+			// berry stem
+			this.ctx.lineWidth = 3;
 			this.ctx.beginPath();
-			this.ctx.arc( posX + posVariant, posY + posVariant, berrySize, 0, 2*Math.PI, false);
+			this.ctx.moveTo(0, posY + 20); // angle stem upward
+			this.ctx.lineTo(posX + posVariantX, posY + posVariantY);
+			this.ctx.stroke();
+			this.ctx.lineWidth = this.options.startLineWidth;
+
+			// berry
+			this.ctx.beginPath();
+			this.ctx.arc( posX + posVariantX, posY + posVariantY, berrySize, 0, 2*Math.PI, false);
 			this.ctx.fill();
 		}
 	},
