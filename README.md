@@ -2,7 +2,7 @@
 
 Plants drawn procedurally on a `<canvas>` element.
 
-Demo coming soon!
+[Demo Here!](http://cemckinley.github.io/generative-plants/)
 
 
 ## Base Dependencies
