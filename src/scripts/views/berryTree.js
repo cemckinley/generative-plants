@@ -25,8 +25,7 @@ var berryTree = {
 		startLineWidth: 14,
 		startingBranchProbability: 0.6, // a decimal between 0-1 to indicate probability of another branch starting from the same point
 		branchProbabilityReductionRate: 0.92, // how fast the probability reduces toward the end of a branch
-		maxBerriesPerSegment: 4,
-		berryWidth: 3
+		leafLength: 20
 	},
 
 	// cached dom references
@@ -36,9 +35,7 @@ var berryTree = {
 		maxBranches: null,
 		startLineWidth: null,
 		startingBranchProbability: null,
-		branchProbabilityReductionRate: null,
-		maxBerriesPerSegment: null,
-		berryWidth: null
+		branchProbabilityReductionRate: null
 	},
 
 
@@ -66,7 +63,7 @@ var berryTree = {
 	 */
 	draw: function(){
 		// recursive function for branching
-		this._createBranch( this.options.avgSegments, 0, this.options.startingBranchProbability, this.options.berryWidth );
+		this._createBranch( this.options.avgSegments, 0, this.options.startingBranchProbability, this.options.leafLength );
 	},
 
 
@@ -100,8 +97,6 @@ var berryTree = {
 		this.ui.startLineWidth = document.getElementById('startLineWidth');
 		this.ui.startingBranchProbability = document.getElementById('startingBranchProbability');
 		this.ui.branchProbabilityReductionRate = document.getElementById('branchProbabilityReductionRate');
-		this.ui.maxBerriesPerSegment = document.getElementById('maxBerriesPerSegment');
-		this.ui.berryWidth = document.getElementById('berryWidth');
 	},
 
 	_addEventHandlers: function(){
@@ -118,8 +113,6 @@ var berryTree = {
 		this.options.startLineWidth = parseInt(this.ui.startLineWidth.value);
 		this.options.startingBranchProbability = parseFloat(this.ui.startingBranchProbability.value);
 		this.options.branchProbabilityReductionRate = parseFloat(this.ui.branchProbabilityReductionRate.value);
-		this.options.maxBerriesPerSegment = parseInt(this.ui.maxBerriesPerSegment.value);
-		this.options.berryWidth = parseInt(this.ui.berryWidth.value);
 	},
 
 	/**
@@ -139,7 +132,7 @@ var berryTree = {
 	 * @param  {Number} branchProbability Probability of creating another branch
 	 * @param  {Number} berrySize         Diameter of the berry, at 100% canvas scale
 	 */
-	_createBranch: function(segments, branches, branchProbability, berrySize){
+	_createBranch: function(segments, branches, branchProbability, leafLength){
 		var segmentVariation = mathUtil.getRandomNumInRange(0, this.options.segmentVariability, true),
 			segmentLength = mathUtil.getRandomNumInRange(-75, -55, false);
 
@@ -153,48 +146,51 @@ var berryTree = {
 
 		// berries
 		if( segments <= this.options.avgSegments / 1.7 ){ // only add berries on upper portion of branches
-			this._drawBerries(berrySize, segmentLength);
+			this._drawLeaves(segmentLength, leafLength);
 		}
 
 		segments--;
 		if( segments + segmentVariation > 0 ){ // recursively call next branch segment
 			this.ctx.scale(0.9, 0.9); // scale each subsequent segment to 90% via scaling the canvas before drawing
-			// next will branch randomly within maxBranch number of times. Berry size needs to incrementally increase to compensate for segment size shrink
-			this._createBranch( segments, this.options.maxBranches, branchProbability * this.options.branchProbabilityReductionRate, berrySize*1.08 );
+			// next will branch randomly within maxBranch number of times. Leaf length needs to incrementally increase to compensate for segment size shrink
+			this._createBranch( segments, this.options.maxBranches, branchProbability * this.options.branchProbabilityReductionRate, leafLength*1.07 );
 		}
 
 		this.ctx.restore();
 
 		branches--;
 		if(branches > 0 && Math.random() <= branchProbability){ // start another branch from last saved coordinate
-			this._createBranch( segments, branches, branchProbability, berrySize );
+			this._createBranch( segments, branches, branchProbability, leafLength );
 		}
 	},
 
-	_drawBerries: function(berrySize, segmentLength){
+	/**
+	 * Somewhat complex maths for drawing leaves on the branches, apologies for the magic numbers
+	 * @param  {[type]} segmentLength [description]
+	 * @param  {[type]} leafLength    [description]
+	 * @return {[type]}               [description]
+	 */
+	_drawLeaves: function(segmentLength, leafLength){
 		var berryCount = Math.random() * this.options.maxBerriesPerSegment,
-			posX = mathUtil.getRandomNumInRange( this.options.startLineWidth, this.options.startLineWidth + 5, true ), // berry should fall just oustide of the segment
-			posY = mathUtil.getRandomNumInRange( 0, segmentLength, false ), // berry should be positioned along the length of the segment
-			posVariantX,
-			posVariantY;
+			posX = mathUtil.getRandomNumInRange( this.options.startLineWidth + 10, this.options.startLineWidth + 20, true ), // random X position just outside of the segment on either side
+			posY = mathUtil.getRandomNumInRange( 0, segmentLength, false ), // random Y position along length of segment
+			xMult = posX > 0 ? 1 : -1, // gives us the direction the leaf is facing, for drawing bezier curves
+			bezVariant = leafLength / 2; // offset of the control points, at nice right angles
 
-		for( var i = 0, len = berryCount; i < len; i++ ){
-			posVariantX = mathUtil.getRandomNumInRange(5, 15, true);
-			posVariantY = mathUtil.getRandomNumInRange(-5, -15, false);
+		// stem
+		this.ctx.lineWidth = 3;
+		this.ctx.beginPath();
+		this.ctx.moveTo(0, posY + 20); // angle stem upward by adding a bit of value
+		this.ctx.lineTo(posX, posY);
+		this.ctx.stroke();
+		this.ctx.lineWidth = this.options.startLineWidth;
 
-			// berry stem
-			this.ctx.lineWidth = 3;
-			this.ctx.beginPath();
-			this.ctx.moveTo(0, posY + 20); // angle stem upward
-			this.ctx.lineTo(posX + posVariantX, posY + posVariantY);
-			this.ctx.stroke();
-			this.ctx.lineWidth = this.options.startLineWidth;
-
-			// berry
-			this.ctx.beginPath();
-			this.ctx.arc( posX + posVariantX, posY + posVariantY, berrySize, 0, 2*Math.PI, false);
-			this.ctx.fill();
-		}
+		// leaf
+		this.ctx.beginPath();
+		this.ctx.moveTo(posX, posY);
+		this.ctx.bezierCurveTo(posX, posY - bezVariant, posX + (bezVariant * xMult), posY - leafLength, posX + (leafLength * xMult), posY - leafLength );
+		this.ctx.bezierCurveTo(posX + (leafLength * xMult), posY - bezVariant, posX + (bezVariant * xMult), posY, posX, posY );
+		this.ctx.fill();
 	},
 
 
