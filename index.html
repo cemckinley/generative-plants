@@ -46,32 +46,32 @@
 						<ul>
 							<li>
 								<label for="avgSegments">Average Segments</label>
-								<input type="text" id="avgSegments" value="28" />
+								<input type="number" id="avgSegments" value="28" />
 								<p>Average number of segments from base to end of branches</p>
 							</li>
 							<li>
 								<label for="segmentVariability">Segment Variability</label>
-								<input type="text" id="segmentVariability" value="2" />
+								<input type="number" id="segmentVariability" value="2" />
 								<p>max number possible +- branch segments from average segments</p>
 							</li>
 							<li>
 								<label for="maxBranches">Max Branches</label>
-								<input type="text" id="maxBranches" value="2" />
+								<input type="number" id="maxBranches" value="2" />
 								<p>Max number of times a segment can branch at a joint</p>
 							</li>
 							<li>
 								<label for="startLineWidth">Starting Line Width</label>
-								<input type="text" id="startLineWidth" value="14" />
+								<input type="number" id="startLineWidth" value="14" />
 								<p>Starting thickness of base, in pixels</p>
 							</li>
 							<li>
 								<label for="startingBranchProbability">Starting branch probability</label>
-								<input type="text" id="startingBranchProbability" value=".6" />
+								<input type="number" step="0.1" id="startingBranchProbability" value="0.6" />
 								<p>A decimal between 0-1 to indicate probability of another branch starting from the same point</p>
 							</li>
 							<li>
 								<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
-								<input type="text" id="branchProbabilityReductionRate" value=".91" />
+								<input type="number" step="0.01" id="branchProbabilityReductionRate" value="0.91" />
 								<p>A decimal between 0-1 for reduction rate of branching in each subsequent segment</p>
 							</li>
 							<li>
