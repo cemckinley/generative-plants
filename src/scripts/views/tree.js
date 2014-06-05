@@ -1,6 +1,6 @@
 /**
- * @module     berryTree
- * @desc       Controls the berry tree rendering and form behavior
+ * @module     tree
+ * @desc       Controls the  tree rendering and form behavior
  * @author     cemckinley <cemckinley@gmail.com>
  * @copyright  Copyright (c) 2013 Cara McKinley
  */
@@ -8,7 +8,7 @@
 var mathUtil = require('../utils/math');
 
 
-var berryTree = {
+var tree = {
 
 	/* PUBLIC PROPERTIES */
 
@@ -25,6 +25,7 @@ var berryTree = {
 		startLineWidth: 14,
 		startingBranchProbability: 0.6, // a decimal between 0-1 to indicate probability of another branch starting from the same point
 		branchProbabilityReductionRate: 0.92, // how fast the probability reduces toward the end of a branch
+		decoration: 'leaves',
 		leafLength: 20
 	},
 
@@ -113,6 +114,7 @@ var berryTree = {
 		this.options.startLineWidth = parseInt(this.ui.startLineWidth.value);
 		this.options.startingBranchProbability = parseFloat(this.ui.startingBranchProbability.value);
 		this.options.branchProbabilityReductionRate = parseFloat(this.ui.branchProbabilityReductionRate.value);
+		this.options.decoration = document.querySelector('#decoration input:checked').value;
 	},
 
 	/**
@@ -145,7 +147,7 @@ var berryTree = {
 		this.ctx.stroke();
 
 		// berries
-		if( segments <= this.options.avgSegments / 1.7 ){ // only add berries on upper portion of branches
+		if( segments <= this.options.avgSegments / 1.7 && this.options.decoration === 'leaves'){ // only add berries on upper portion of branches
 			this._drawLeaves(segmentLength, leafLength);
 		}
 
@@ -206,5 +208,5 @@ var berryTree = {
 };
 
 
-module.exports = berryTree;
+module.exports = tree;
 

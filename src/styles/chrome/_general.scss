@@ -46,17 +46,19 @@ fieldset ul li{
 	display: block;
 	clear: both;
 	padding: 0;
-	margin: 0 0 15px 0;
+	margin: 0 0 20px 0;
+	font-family: $main-font;
+	font-size: 12px;
 }
 label{
 	display: inline-block;
 	vertical-align: middle;
-	margin: 0 10px 0 0;
+	margin: 0 10px 5px 0;
 	font-size: 12px;
 	font-weight: bold;
 	float: left;
 }
-input{
+input[type="text"]{
 	float: right;
 	display: block;
 }
@@ -68,6 +70,13 @@ input[type="submit"]{
 	clear: both;
 	float: none;
 	margin: 15px 0 0 0;
+}
+.radio-group{
+	text-align: right;
+
+	input{
+		margin-left: 15px;
+	}
 }
 #wrapper{
 	width: 960px;

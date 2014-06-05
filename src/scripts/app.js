@@ -6,7 +6,7 @@
  */
 
 
-var berryTreeView = require('./views/berryTree.js');
+var treeView = require('./views/tree.js');
 
 
 
@@ -23,7 +23,7 @@ var Application = {
 	 */
 	initialize: function () {
 
-		berryTreeView.initialize();
+		treeView.initialize();
 
 	},
 

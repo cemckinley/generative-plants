@@ -71,13 +71,15 @@
 							</li>
 							<li>
 								<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
-								<input type="text" id="branchProbabilityReductionRate" value=".92" />
+								<input type="text" id="branchProbabilityReductionRate" value=".91" />
 								<p>A decimal between 0-1 for reduction rate of branching in each subsequent segment</p>
 							</li>
 							<li>
 								<label for="branchDecoration">Branch Decoration</label>
-								<span class="option"><input name="branchDecoration" type="radio" value="leaves" />Leaves</span>
-								<span class="option"><input name="branchDecoration" type="radio" value="none" />None</span>
+								<div class="radio-group" id="decoration">
+									<input name="branchDecoration" type="radio" value="leaves" checked="checked"/>Leaves
+									<input name="branchDecoration" type="radio" value="none" />None
+								</div>
 								<p>Decoration/foliage on the branches</p>
 							</li>
 						</ul>
