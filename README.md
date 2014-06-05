@@ -22,7 +22,7 @@ Third party js libs on this project are managed using Bower. Libs are installed 
 
 
 ## Workflow
-All development work should be done in the 'src' directory. Use the grunt commands below for running the project locally and processing for handoff to QA/Staging/Production.
+All development work should be done in the 'src' directory. Use the grunt commands below for running the project locally and processing for deployable files.
 
 
 ## Using grunt in the Terminal

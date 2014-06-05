@@ -15,7 +15,7 @@ h1{
 	margin: 0 0 20px 0;
 }
 p{
-	width: 240px;
+	width: 230px;
 	display: inline-block;
 	clear: both;
 	margin: 0;
@@ -58,12 +58,12 @@ label{
 	font-weight: bold;
 	float: left;
 }
-input[type="text"]{
+input[type="text"], input[type="number"]{
 	float: right;
 	display: block;
 }
-input[type="text"]{
-	width: 30px;
+input[type="text"], input[type="number"]{
+	width: 40px;
 }
 input[type="submit"]{
 	display: block;
