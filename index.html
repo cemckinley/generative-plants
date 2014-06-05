@@ -71,17 +71,16 @@
 							</li>
 							<li>
 								<label for="branchProbabilityReductionRate">Branch Probability Reduction Rate</label>
-								<input type="text" id="branchProbabilityReductionRate" value=".92" />
+								<input type="text" id="branchProbabilityReductionRate" value=".91" />
 								<p>A decimal between 0-1 for reduction rate of branching in each subsequent segment</p>
 							</li>
 							<li>
-								<label for="maxBerriesPerSegment">Max berries per cluster</label>
-								<input type="text" id="maxBerriesPerSegment" value="1" />
-								<p>Max number of berries to appear in a cluster on any given segment. Note: berries do not appear until upper half of possible segments</p>
-							</li>
-							<li>
-								<label for="berryWidth">Berry Diameter</label>
-								<input type="text" id="berryWidth" value="3" />
+								<label for="branchDecoration">Branch Decoration</label>
+								<div class="radio-group" id="decoration">
+									<input name="branchDecoration" type="radio" value="leaves" checked="checked"/>Leaves
+									<input name="branchDecoration" type="radio" value="none" />None
+								</div>
+								<p>Decoration/foliage on the branches</p>
 							</li>
 						</ul>
 						<br />
